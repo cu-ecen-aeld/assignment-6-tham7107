@@ -26,6 +26,13 @@ TARGET_LDFLAGS += "-pthread"
 # From https://stackoverflow.com/questions/57669621/installing-a-precompiled-library-that-depends-on-another-in-a-bitbake-recipe
 RDEPENDS:${PN} += "libgcc"
 
+# See class slides and
+# http://www.embeddedlinux.org.cn/OEManual/update-rc-d_class.html
+INITSCRIPT_PACKAGES = "${PN}"
+INITSCRIPT_NAME:${PN} = "aesdsocket-start-stop"
+INITSCRIPT_PARAMS = "defaults 98"
+inherit update-rc.d
+
 do_configure () {
 	:
 }
@@ -55,4 +62,6 @@ do_install () {
 #	install -m 0755 ${S}/aesdsocket ${D}
 	install -d ${D}${bindir}/
 	install -m 0755 ${S}/aesdsocket ${D}${bindir}/
+	install -d ${D}${sysconfdir}/init.d
+	install -m 0755 ${S}/aesdsocket-start-stop ${D}${sysconfdir}/init.d
 }
